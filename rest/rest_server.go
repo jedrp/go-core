@@ -160,7 +160,7 @@ func NewServer(handler http.Handler, logger log.Logger) *Server {
 }
 
 func (s *Server) Serve() error {
-	s.logger.Infof("Sever starting serving REST(https)  at: %s", s.listener.Addr())
+	s.logger.Infof("Sever starting serving at: %s", s.listener.Addr())
 	if err := s.httpServer.Serve(s.listener); err != nil && err != http.ErrServerClosed {
 		s.logger.Fatalf("%v", err)
 		return err

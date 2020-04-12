@@ -77,12 +77,24 @@ func newWith(logrusLogger *LogrusLogger) Logger {
 
 func addHook(log *logrus.Logger, hookStr string, level logrus.Level) {
 	if hookStr != "" {
-		hook, err := NewElasticHookFromStr(hookStr, level)
-		if err != nil {
-			log.Panic(err)
+		hookType := getHookType(hookStr)
+		switch hookType {
+		case "es":
+			hook, err := NewElasticHookFromStr(hookStr, level)
+			if err != nil {
+				log.Panic(err)
+			}
+			log.Hooks.Add(hook)
+			break
 		}
-		log.Hooks.Add(hook)
 	}
+}
+func getHookType(hookStr string) string {
+	config, err := util.GetConfig(hookStr)
+	if err != nil {
+		panic(err)
+	}
+	return config[HookType]
 }
 
 // WithFields

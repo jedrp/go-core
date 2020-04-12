@@ -1,8 +1,15 @@
 package main
 
-import "github.com/jedrp/go-core/log"
+import (
+	"fmt"
+
+	"github.com/jedrp/go-core/boo"
+	"github.com/jedrp/go-core/booo"
+)
 
 func main() {
-	logger := log.New()
-	logger.Info("hi there")
+	fmt.Println(boo.AAAA.String())
+	fmt.Println(boo.AAAA.String())
+	fmt.Println(boo.AAAA.String())
+	booo.PrintValue()
 }
