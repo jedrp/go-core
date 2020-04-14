@@ -45,7 +45,9 @@ func NewServer(servicesRegistrationFunc ServicesRegistrationFunc, logger logcore
 	ParseConfig(parser)
 
 	if server.SettingStr == "" {
-		panic("empty server setting string")
+		logger.Warn("empty server setting string")
+	} else {
+		logger.Infof("server start with setting string: %v", server.SettingStr)
 	}
 	config, err := util.GetConfig(server.SettingStr)
 	if err != nil {

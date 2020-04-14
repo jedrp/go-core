@@ -58,7 +58,9 @@ func NewServer(handler http.Handler, logger log.Logger) *Server {
 	parseConfig(parser)
 
 	if server.SettingStr == "" {
-		panic("empty server setting string")
+		logger.Warn("empty server setting string")
+	} else {
+		logger.Infof("server start with setting string: %v", server.SettingStr)
 	}
 
 	config, err := util.GetConfig(server.SettingStr)
