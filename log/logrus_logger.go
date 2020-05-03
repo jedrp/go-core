@@ -75,7 +75,10 @@ func newWith(logrusLogger *LogrusLogger) Logger {
 	addHook(log, logrusLogger.LogHook3, level)
 	addHook(log, logrusLogger.LogHook4, level)
 
-	logSetting, _ := json.Marshal(logrusLogger)
+	logSetting, err := json.Marshal(logrusLogger)
+	if err != nil {
+		log.Infof("serialize log setting fail with message %s", err.Error())
+	}
 	log.Infof("log initialized with setting: %s", string(logSetting))
 	return logrusLogger
 }
