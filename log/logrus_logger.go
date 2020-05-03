@@ -25,9 +25,9 @@ type LogrusLogger struct {
 	LogHook3 string `long:"log-hook-3" description:"the hook connection string" env:"LOG_HOOK_3" json:"hook3,omitempty"`
 	LogHook4 string `long:"log-hook-4" description:"the hook connection string" env:"LOG_HOOK_4" json:"hook4,omitempty"`
 
-	LogConfigStr string `long:"log-config" description:"the hook connection string" env:"LOG_CONFIG" json:"logConfigStr,omitempty"`
-	logLevel     string
-	*logrus.Logger
+	LogConfigStr   string `long:"log-config" description:"the hook connection string" env:"LOG_CONFIG" json:"logConfigStr,omitempty"`
+	logLevel       string
+	*logrus.Logger `json:"-"`
 }
 
 // New logger
