@@ -76,7 +76,7 @@ func newWith(logrusLogger *LogrusLogger) Logger {
 	addHook(log, logrusLogger.LogHook4, level)
 
 	logSetting, _ := json.Marshal(logrusLogger)
-	log.Infof("log initialized with setting: %+v\n", string(logSetting))
+	log.Infof("log initialized with setting: %s", string(logSetting))
 	return logrusLogger
 }
 
