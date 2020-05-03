@@ -13,6 +13,7 @@ import (
 const (
 	// HookType type of hook es (elastic search)
 	HookType = "type"
+	Loglevel = "level"
 )
 
 // LogrusLogger logrus wrapper implementation
@@ -56,6 +57,10 @@ func newWith(logrusLogger *LogrusLogger) Logger {
 	logrusLogger.Logger = log
 	if config == nil {
 		return logrusLogger
+	}
+
+	if v, f := config[Loglevel]; f {
+		logrusLogger.logLevel = v
 	}
 
 	level, err := logrus.ParseLevel(logrusLogger.logLevel)
