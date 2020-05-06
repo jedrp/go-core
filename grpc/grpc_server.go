@@ -6,6 +6,7 @@ import (
 	"net"
 	"os"
 	"strconv"
+	"time"
 
 	strfmt "github.com/go-openapi/strfmt"
 	grpc_middleware "github.com/grpc-ecosystem/go-grpc-middleware"
@@ -15,6 +16,7 @@ import (
 	flags "github.com/jessevdk/go-flags"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials"
+	"google.golang.org/grpc/keepalive"
 )
 
 type ServicesRegistrationFunc func(*grpc.Server)
@@ -78,7 +80,9 @@ func NewServer(servicesRegistrationFunc ServicesRegistrationFunc, logger logcore
 			grpc_recovery.WithRecoveryHandlerContext(getRecoveryHandlerFuncContextHandler(logger)),
 		),
 		StreamValidatorServerInterceptor(formats, logger),
-	))}
+	)), grpc.KeepaliveParams(keepalive.ServerParameters{
+		MaxConnectionIdle: 5 * time.Minute, // <--- This fixes it!
+	})}
 	if cert != "" || certKey != "" {
 		creds, err := credentials.NewServerTLSFromFile(cert, certKey)
 		if err != nil {
