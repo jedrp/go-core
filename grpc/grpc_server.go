@@ -70,7 +70,12 @@ func NewServer(servicesRegistrationFunc ServicesRegistrationFunc, logger logcore
 
 	formats := strfmt.Default
 	var grpcServer *grpc.Server
-	grpcOpts := []grpc.ServerOption{grpc.UnaryInterceptor(grpc_middleware.ChainUnaryServer(
+	grpcOpts := []grpc.ServerOption{grpc.KeepaliveParams(keepalive.ServerParameters{
+		MaxConnectionIdle: 5 * time.Minute, // <--- This fixes it!
+	}), grpc.KeepaliveEnforcementPolicy(keepalive.EnforcementPolicy{
+		MinTime:             1 * time.Minute,
+		PermitWithoutStream: true,
+	}), grpc.UnaryInterceptor(grpc_middleware.ChainUnaryServer(
 		UnaryServerRequestContextInterceptor(),
 		UnaryServerPanicInterceptor(logger),
 		UnaryValidatorServerInterceptor(formats, logger),
@@ -80,12 +85,7 @@ func NewServer(servicesRegistrationFunc ServicesRegistrationFunc, logger logcore
 			grpc_recovery.WithRecoveryHandlerContext(getRecoveryHandlerFuncContextHandler(logger)),
 		),
 		StreamValidatorServerInterceptor(formats, logger),
-	)), grpc.KeepaliveParams(keepalive.ServerParameters{
-		MaxConnectionIdle: 5 * time.Minute, // <--- This fixes it!
-	}), grpc.KeepaliveEnforcementPolicy(keepalive.EnforcementPolicy{
-		MinTime:             1 * time.Minute,
-		PermitWithoutStream: true,
-	})}
+	))}
 	if cert != "" || certKey != "" {
 		creds, err := credentials.NewServerTLSFromFile(cert, certKey)
 		if err != nil {
