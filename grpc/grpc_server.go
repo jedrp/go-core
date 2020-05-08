@@ -82,6 +82,9 @@ func NewServer(servicesRegistrationFunc ServicesRegistrationFunc, logger logcore
 		StreamValidatorServerInterceptor(formats, logger),
 	)), grpc.KeepaliveParams(keepalive.ServerParameters{
 		MaxConnectionIdle: 5 * time.Minute, // <--- This fixes it!
+	}), grpc.KeepaliveEnforcementPolicy(keepalive.EnforcementPolicy{
+		MinTime:             1 * time.Minute,
+		PermitWithoutStream: true,
 	})}
 	if cert != "" || certKey != "" {
 		creds, err := credentials.NewServerTLSFromFile(cert, certKey)
