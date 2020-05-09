@@ -1,13 +1,15 @@
 package result
 
 import (
+	"errors"
+
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 )
 
 func GetRPCError(err *Error) error {
 	if err == nil {
-		return nil
+		return errors.New("unknown error")
 	}
 	var grpcCode codes.Code
 	switch err.Code {
