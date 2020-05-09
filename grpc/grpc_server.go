@@ -109,7 +109,7 @@ func (s *Server) Serve() error {
 	if err != nil {
 		s.logger.Panicf("failed to listen: %v", err)
 	}
-	s.logger.Infof("Sever starting serving gRPC at: %s\n", lis.Addr())
+	s.logger.Infof("Sever starting serving gRPC at: %s", lis.Addr())
 	if err = s.grpcServer.Serve(lis); err != nil {
 		s.logger.Fatalf("failed to serve: %s", err)
 		return err

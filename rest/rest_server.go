@@ -180,7 +180,6 @@ func setConfigInt(config map[string]string, settingField *int, key string) {
 }
 func parseConfig(parser *flags.Parser) {
 	if _, err := parser.Parse(); err != nil {
-		panic(err)
 		code := 1
 		if fe, ok := err.(*flags.Error); ok {
 			if fe.Type == flags.ErrHelp {
