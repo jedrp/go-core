@@ -110,6 +110,10 @@ func (logrusLogger *LogrusLogger) WithFields(fields map[string]interface{}) LogE
 	return logrusLogger.Logger.WithFields(fields)
 }
 
+func (logrusLogger *LogrusLogger) IsLevelEnabled(level logrus.Level) bool {
+	return logrusLogger.Logger.IsLevelEnabled(level)
+}
+
 // NewEntry
 func NewEntry(logger *LogrusLogger) *logrus.Entry {
 	return &logrus.Entry{

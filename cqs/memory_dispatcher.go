@@ -7,6 +7,8 @@ import (
 	"runtime/debug"
 	"time"
 
+	"github.com/sirupsen/logrus"
+
 	"github.com/jedrp/go-core/log"
 	"github.com/jedrp/go-core/result"
 )
@@ -58,6 +60,9 @@ func (d *MemoryDispatcher) Dispatch(ctx context.Context, e Executor) *result.Res
 	}
 
 	typeName := reflect.TypeOf(e).String()
+	if d.logger.IsLevelEnabled(logrus.DebugLevel) {
+		defer elapsed("dispatching "+typeName, d.logger)()
+	}
 	if depsWrapper, ok := d.registeredDependencesWrappers[typeName]; ok {
 		e.SetDependences(ctx, depsWrapper)
 		r := e.Execute(ctx)
@@ -70,4 +75,11 @@ func (d *MemoryDispatcher) Dispatch(ctx context.Context, e Executor) *result.Res
 	msg := fmt.Sprintf("MemoryDispatcher can't find dependences for type %s", reflect.TypeOf(e).String())
 	log.CreateRequestLogEntryFromContext(ctx, d.logger).Error(msg)
 	return INVOKER_INTERNAL_ERROR
+}
+
+func elapsed(what string, logger log.Logger) func() {
+	start := time.Now()
+	return func() {
+		logger.Debugf("%s took %v", what, time.Since(start))
+	}
 }

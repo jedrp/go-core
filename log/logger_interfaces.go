@@ -1,6 +1,11 @@
 package log
 
+import (
+	"github.com/sirupsen/logrus"
+)
+
 type Logger interface {
+	IsLevelEnabled(level logrus.Level) bool
 	Trace(args ...interface{})
 	Debug(args ...interface{})
 	Info(args ...interface{})
