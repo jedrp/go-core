@@ -54,7 +54,14 @@ func newWith(logrusLogger *LogrusLogger) Logger {
 	if err != nil {
 		log.Panic(err)
 	}
-	log := logrus.New()
+	log := &logrus.Logger{
+		Out:          os.Stdout,
+		Formatter:    new(LoggerTextFormatter),
+		Hooks:        make(logrus.LevelHooks),
+		Level:        logrus.InfoLevel,
+		ExitFunc:     os.Exit,
+		ReportCaller: false,
+	}
 	logrusLogger.Logger = log
 	if config == nil {
 		return logrusLogger
@@ -70,10 +77,6 @@ func newWith(logrusLogger *LogrusLogger) Logger {
 		log.Panic(err)
 	}
 	log.Level = level
-	log.SetFormatter(&logrus.TextFormatter{
-		ForceQuote:     true,
-		DisableSorting: true,
-	})
 	addHook(log, logrusLogger.LogHook1, level)
 	addHook(log, logrusLogger.LogHook2, level)
 	addHook(log, logrusLogger.LogHook3, level)
