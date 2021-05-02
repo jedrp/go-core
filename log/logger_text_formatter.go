@@ -3,12 +3,8 @@ package log
 import (
 	"bytes"
 	"fmt"
-	"io"
-	"os"
 	"runtime"
-	"sync"
 	"time"
-	"unicode/utf8"
 
 	"github.com/sirupsen/logrus"
 )
@@ -103,24 +99,6 @@ type LoggerTextFormatter struct {
 	// activated. If any of the returned value is the empty string the
 	// corresponding key will be removed from fields.
 	CallerPrettyfier func(*runtime.Frame) (function string, file string)
-
-	terminalInitOnce sync.Once
-
-	// The max length of the level text, generated dynamically on init
-	levelTextMaxLength int
-}
-
-func (f *LoggerTextFormatter) init(entry *logrus.Entry) {
-	if entry.Logger != nil {
-		f.isTerminal = checkIfTerminal(entry.Logger.Out)
-	}
-	// Get the max length of the level text
-	for _, level := range logrus.AllLevels {
-		levelTextLength := utf8.RuneCount([]byte(level.String()))
-		if levelTextLength > f.levelTextMaxLength {
-			f.levelTextMaxLength = levelTextLength
-		}
-	}
 }
 
 // Format renders a single log entry
@@ -149,8 +127,6 @@ func (f *LoggerTextFormatter) Format(entry *logrus.Entry) ([]byte, error) {
 	} else {
 		b = &bytes.Buffer{}
 	}
-
-	f.terminalInitOnce.Do(func() { f.init(entry) })
 
 	timestampFormat := f.TimestampFormat
 	if timestampFormat == "" {
@@ -190,13 +166,4 @@ func (f *LoggerTextFormatter) appendValue(b *bytes.Buffer, value interface{}) {
 		stringVal = fmt.Sprint(value)
 	}
 	b.WriteString(stringVal)
-}
-
-func checkIfTerminal(w io.Writer) bool {
-	switch v := w.(type) {
-	case *os.File:
-		return isTerminal(int(v.Fd()))
-	default:
-		return false
-	}
 }
