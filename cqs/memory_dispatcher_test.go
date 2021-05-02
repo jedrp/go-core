@@ -29,7 +29,7 @@ func (*testCommand) SetDependences(context.Context, interface{}) {
 }
 func TestDitpatcher(t *testing.T) {
 	d := NewMemoryDispatcher(
-		&log.DefaultLogger{},
+		log.New(),
 		100,
 	)
 	ctx := context.Background()
