@@ -11,7 +11,6 @@ import (
 	"unicode/utf8"
 
 	"github.com/sirupsen/logrus"
-	"golang.org/x/sys/unix"
 )
 
 const (
@@ -25,7 +24,6 @@ var baseTimestamp time.Time
 
 const (
 	defaultTimestampFormat = "2006-01-02 15:04:05.123+07:00"
-	ioctlReadTermios       = unix.TIOCGETA
 	FieldKeyMsg            = "Message"
 	FieldKeyLevel          = "Level"
 	FieldKeyTime           = "Time"
@@ -201,9 +199,4 @@ func checkIfTerminal(w io.Writer) bool {
 	default:
 		return false
 	}
-}
-
-func isTerminal(fd int) bool {
-	_, err := unix.IoctlGetTermios(fd, ioctlReadTermios)
-	return err == nil
 }
