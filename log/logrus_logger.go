@@ -1,6 +1,7 @@
 package log
 
 import (
+	"context"
 	"encoding/json"
 	"log"
 	"os"
@@ -69,7 +70,10 @@ func newWith(logrusLogger *LogrusLogger) Logger {
 		log.Panic(err)
 	}
 	log.Level = level
-
+	log.SetFormatter(&logrus.TextFormatter{
+		ForceQuote:     true,
+		DisableSorting: true,
+	})
 	addHook(log, logrusLogger.LogHook1, level)
 	addHook(log, logrusLogger.LogHook2, level)
 	addHook(log, logrusLogger.LogHook3, level)
@@ -121,4 +125,47 @@ func NewEntry(logger *LogrusLogger) *logrus.Entry {
 		// Default is three fields, plus one optional.  Give a little extra room.
 		Data: make(logrus.Fields, 6),
 	}
+}
+
+func (logrusLogger *LogrusLogger) TraceWithContext(ctx context.Context, args ...interface{}) {
+	CreateRequestLogEntryFromContext(ctx, logrusLogger).Trace(args)
+}
+func (logrusLogger *LogrusLogger) DebugWithContext(ctx context.Context, args ...interface{}) {
+	CreateRequestLogEntryFromContext(ctx, logrusLogger).Debug(args)
+}
+func (logrusLogger *LogrusLogger) InfoWithContext(ctx context.Context, args ...interface{}) {
+	CreateRequestLogEntryFromContext(ctx, logrusLogger).Info(args)
+}
+func (logrusLogger *LogrusLogger) WarnWithContext(ctx context.Context, args ...interface{}) {
+	CreateRequestLogEntryFromContext(ctx, logrusLogger).Warn(args)
+}
+func (logrusLogger *LogrusLogger) ErrorWithContext(ctx context.Context, args ...interface{}) {
+	CreateRequestLogEntryFromContext(ctx, logrusLogger).Error(args)
+}
+func (logrusLogger *LogrusLogger) FatalWithContext(ctx context.Context, args ...interface{}) {
+	CreateRequestLogEntryFromContext(ctx, logrusLogger).Error(args)
+}
+func (logrusLogger *LogrusLogger) PanicWithContext(ctx context.Context, args ...interface{}) {
+	CreateRequestLogEntryFromContext(ctx, logrusLogger).Error(args)
+}
+func (logrusLogger *LogrusLogger) TracefWithContext(ctx context.Context, format string, args ...interface{}) {
+	CreateRequestLogEntryFromContext(ctx, logrusLogger).Tracef(format, args)
+}
+func (logrusLogger *LogrusLogger) DebugfWithContext(ctx context.Context, format string, args ...interface{}) {
+	CreateRequestLogEntryFromContext(ctx, logrusLogger).Debugf(format, args)
+}
+func (logrusLogger *LogrusLogger) InfofWithContext(ctx context.Context, format string, args ...interface{}) {
+	CreateRequestLogEntryFromContext(ctx, logrusLogger).Infof(format, args)
+}
+func (logrusLogger *LogrusLogger) WarnfWithContext(ctx context.Context, format string, args ...interface{}) {
+	CreateRequestLogEntryFromContext(ctx, logrusLogger).Warnf(format, args)
+}
+func (logrusLogger *LogrusLogger) ErrorfWithContext(ctx context.Context, format string, args ...interface{}) {
+	CreateRequestLogEntryFromContext(ctx, logrusLogger).Errorf(format, args)
+}
+func (logrusLogger *LogrusLogger) FatalfWithContext(ctx context.Context, format string, args ...interface{}) {
+	CreateRequestLogEntryFromContext(ctx, logrusLogger).Fatalf(format, args)
+}
+func (logrusLogger *LogrusLogger) PanicfWithContext(ctx context.Context, format string, args ...interface{}) {
+	CreateRequestLogEntryFromContext(ctx, logrusLogger).Panicf(format, args)
 }
