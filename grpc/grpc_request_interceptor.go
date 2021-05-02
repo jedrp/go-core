@@ -31,14 +31,15 @@ func setUpRequestInfoToContext(baseCtx context.Context) (context.Context, error)
 		if len(corIDs) > 0 {
 			baseCtx = context.WithValue(baseCtx, log.CorrelationID, corIDs[0])
 		}
+		var requestId string
 		requestIDs := md.Get(log.RequestIDHeaderKey)
 		if len(requestIDs) > 0 {
-			requestId := requestIDs[0]
-			if requestId == "" {
-				requestId = uuid.NewV4().String()
-			}
-			baseCtx = context.WithValue(baseCtx, log.CorrelationID, requestId)
+			requestId = requestIDs[0]
 		}
+		if requestId == "" {
+			requestId = uuid.NewV4().String()
+		}
+		baseCtx = context.WithValue(baseCtx, log.RequestID, requestId)
 
 		return baseCtx, nil
 	}

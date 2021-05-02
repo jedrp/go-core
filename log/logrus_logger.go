@@ -131,44 +131,44 @@ func NewEntry(logger *LogrusLogger) *logrus.Entry {
 }
 
 func (logrusLogger *LogrusLogger) TraceWithContext(ctx context.Context, args ...interface{}) {
-	CreateRequestLogEntryFromContext(ctx, logrusLogger).Trace(args)
+	CreateRequestLogEntryFromContext(ctx, logrusLogger).Trace(args...)
 }
 func (logrusLogger *LogrusLogger) DebugWithContext(ctx context.Context, args ...interface{}) {
-	CreateRequestLogEntryFromContext(ctx, logrusLogger).Debug(args)
+	CreateRequestLogEntryFromContext(ctx, logrusLogger).Debug(args...)
 }
 func (logrusLogger *LogrusLogger) InfoWithContext(ctx context.Context, args ...interface{}) {
-	CreateRequestLogEntryFromContext(ctx, logrusLogger).Info(args)
+	CreateRequestLogEntryFromContext(ctx, logrusLogger).Info(args...)
 }
 func (logrusLogger *LogrusLogger) WarnWithContext(ctx context.Context, args ...interface{}) {
-	CreateRequestLogEntryFromContext(ctx, logrusLogger).Warn(args)
+	CreateRequestLogEntryFromContext(ctx, logrusLogger).Warn(args...)
 }
 func (logrusLogger *LogrusLogger) ErrorWithContext(ctx context.Context, args ...interface{}) {
-	CreateRequestLogEntryFromContext(ctx, logrusLogger).Error(args)
+	CreateRequestLogEntryFromContext(ctx, logrusLogger).Error(args...)
 }
 func (logrusLogger *LogrusLogger) FatalWithContext(ctx context.Context, args ...interface{}) {
-	CreateRequestLogEntryFromContext(ctx, logrusLogger).Error(args)
+	CreateRequestLogEntryFromContext(ctx, logrusLogger).Error(args...)
 }
 func (logrusLogger *LogrusLogger) PanicWithContext(ctx context.Context, args ...interface{}) {
-	CreateRequestLogEntryFromContext(ctx, logrusLogger).Error(args)
+	CreateRequestLogEntryFromContext(ctx, logrusLogger).Error(args...)
 }
 func (logrusLogger *LogrusLogger) TracefWithContext(ctx context.Context, format string, args ...interface{}) {
-	CreateRequestLogEntryFromContext(ctx, logrusLogger).Tracef(format, args)
+	CreateRequestLogEntryFromContext(ctx, logrusLogger).Tracef(format, args...)
 }
 func (logrusLogger *LogrusLogger) DebugfWithContext(ctx context.Context, format string, args ...interface{}) {
-	CreateRequestLogEntryFromContext(ctx, logrusLogger).Debugf(format, args)
+	CreateRequestLogEntryFromContext(ctx, logrusLogger).Debugf(format, args...)
 }
 func (logrusLogger *LogrusLogger) InfofWithContext(ctx context.Context, format string, args ...interface{}) {
-	CreateRequestLogEntryFromContext(ctx, logrusLogger).Infof(format, args)
+	CreateRequestLogEntryFromContext(ctx, logrusLogger).Infof(format, args...)
 }
 func (logrusLogger *LogrusLogger) WarnfWithContext(ctx context.Context, format string, args ...interface{}) {
-	CreateRequestLogEntryFromContext(ctx, logrusLogger).Warnf(format, args)
+	CreateRequestLogEntryFromContext(ctx, logrusLogger).Warnf(format, args...)
 }
 func (logrusLogger *LogrusLogger) ErrorfWithContext(ctx context.Context, format string, args ...interface{}) {
-	CreateRequestLogEntryFromContext(ctx, logrusLogger).Errorf(format, args)
+	CreateRequestLogEntryFromContext(ctx, logrusLogger).Errorf(format, args...)
 }
 func (logrusLogger *LogrusLogger) FatalfWithContext(ctx context.Context, format string, args ...interface{}) {
-	CreateRequestLogEntryFromContext(ctx, logrusLogger).Fatalf(format, args)
+	CreateRequestLogEntryFromContext(ctx, logrusLogger).Fatalf(format, args...)
 }
 func (logrusLogger *LogrusLogger) PanicfWithContext(ctx context.Context, format string, args ...interface{}) {
-	CreateRequestLogEntryFromContext(ctx, logrusLogger).Panicf(format, args)
+	CreateRequestLogEntryFromContext(ctx, logrusLogger).Panicf(format, args...)
 }
