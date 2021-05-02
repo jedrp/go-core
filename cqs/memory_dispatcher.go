@@ -61,7 +61,7 @@ func (d *MemoryDispatcher) Dispatch(ctx context.Context, e Executor) *result.Res
 
 	typeName := reflect.TypeOf(e).String()
 	if d.logger.IsLevelEnabled(logrus.DebugLevel) {
-		defer elapsed("dispatching "+typeName, d.logger)()
+		defer elapsed(ctx, "dispatching "+typeName, d.logger)()
 	}
 	if depsWrapper, ok := d.registeredDependencesWrappers[typeName]; ok {
 		e.SetDependences(ctx, depsWrapper)
@@ -77,9 +77,9 @@ func (d *MemoryDispatcher) Dispatch(ctx context.Context, e Executor) *result.Res
 	return INVOKER_INTERNAL_ERROR
 }
 
-func elapsed(what string, logger log.Logger) func() {
+func elapsed(ctx context.Context, what string, logger log.Logger) func() {
 	start := time.Now()
 	return func() {
-		logger.Debugf("%s took %v", what, time.Since(start))
+		logger.DebugfWithContext(ctx, "%s took %v", what, time.Since(start))
 	}
 }
