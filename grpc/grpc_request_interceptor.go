@@ -24,15 +24,23 @@ func UnaryServerRequestContextInterceptor() grpc.UnaryServerInterceptor {
 }
 
 func setUpRequestInfoToContext(baseCtx context.Context) (context.Context, error) {
-	ctx := context.WithValue(baseCtx, log.RequestID, uuid.NewV4().String())
 
-	md, ok := metadata.FromIncomingContext(ctx)
+	md, ok := metadata.FromIncomingContext(baseCtx)
 	if ok {
-		corID := md.Get(log.CorrelationIDHeaderKey)
-		if len(corID) > 0 && corID[0] != "" {
-			ctx = context.WithValue(ctx, log.CorrelationID, corID[0])
+		corIDs := md.Get(log.CorrelationIDHeaderKey)
+		if len(corIDs) > 0 {
+			baseCtx = context.WithValue(baseCtx, log.CorrelationID, corIDs[0])
 		}
-		return ctx, nil
+		requestIDs := md.Get(log.RequestIDHeaderKey)
+		if len(requestIDs) > 0 {
+			requestId := requestIDs[0]
+			if requestId == "" {
+				requestId = uuid.NewV4().String()
+			}
+			baseCtx = context.WithValue(baseCtx, log.CorrelationID, requestId)
+		}
+
+		return baseCtx, nil
 	}
 	return nil, fmt.Errorf("Unable to obtain metadata")
 }
