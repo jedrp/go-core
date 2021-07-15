@@ -7,6 +7,7 @@ import (
 	"github.com/jedrp/go-core/log"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/codes"
+	"google.golang.org/grpc/status"
 )
 
 type validator interface {
@@ -26,7 +27,7 @@ func UnaryValidatorServerInterceptor(formats strfmt.Registry, logger log.Logger)
 		if v, ok := req.(validator); ok {
 			if err := v.Validate(formats); err != nil {
 				log.CreateRequestLogEntryFromContext(ctx, logger).Errorf("InvalidArgument %s", err.Error())
-				return nil, grpc.Errorf(codes.InvalidArgument, err.Error())
+				return nil, status.Errorf(codes.InvalidArgument, err.Error())
 			}
 		}
 		return handler(ctx, req)
@@ -48,7 +49,7 @@ func (s *receiverWrapper) RecvMsg(m interface{}) error {
 	if v, ok := m.(validator); ok {
 		if err := v.Validate(s.formats); err != nil {
 			log.CreateRequestLogEntryFromContext(s.ctx, s.logger).Errorf("InvalidArgument %s", err.Error())
-			return grpc.Errorf(codes.InvalidArgument, err.Error())
+			return status.Errorf(codes.InvalidArgument, err.Error())
 		}
 	}
 	return nil

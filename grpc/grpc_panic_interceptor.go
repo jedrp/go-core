@@ -7,6 +7,8 @@ import (
 	grpc_recovery "github.com/grpc-ecosystem/go-grpc-middleware/recovery"
 	"github.com/jedrp/go-core/log"
 	"google.golang.org/grpc"
+	"google.golang.org/grpc/codes"
+	"google.golang.org/grpc/status"
 )
 
 //UnaryServerPanicInterceptor hanle unexpected panic
@@ -16,11 +18,13 @@ func UnaryServerPanicInterceptor(logger log.Logger) grpc.UnaryServerInterceptor 
 			if r := recover(); r != nil {
 				if logger != nil {
 					log.CreateRequestLogEntryFromContext(ctx, logger).Error(r, string(debug.Stack()))
+					err = status.Errorf(codes.Internal, "%v", r)
 				}
 			}
 		}()
 
-		return handler(ctx, req)
+		resp, err := handler(ctx, req)
+		return resp, err
 	}
 }
 
