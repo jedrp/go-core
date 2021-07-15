@@ -11,6 +11,6 @@ require (
 	github.com/olivere/elastic/v7 v7.0.14
 	github.com/satori/go.uuid v1.2.0
 	github.com/sirupsen/logrus v1.5.0
-	golang.org/x/net v0.0.0-20200324143707-d3edc9973b7e
-	google.golang.org/grpc v1.28.1
+	golang.org/x/net v0.0.0-20200822124328-c89045814202
+	google.golang.org/grpc v1.39.0
 )
