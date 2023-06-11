@@ -17,6 +17,10 @@ const (
 	Loglevel = "level"
 )
 
+var (
+	DefaultLogger = New()
+)
+
 // LogrusLogger logrus wrapper implementation
 // LogHook# fired when log fired
 // Elasticsearch hook format "type=[es];host=host_url;index-prefix=prefix;sniff=true|false;mode=sync|async"
@@ -54,11 +58,13 @@ func newWith(logrusLogger *LogrusLogger) Logger {
 	if err != nil {
 		log.Panic(err)
 	}
+	defaultLoglevel, _ := logrus.ParseLevel(logrusLogger.logLevel)
+
 	log := &logrus.Logger{
 		Out:          os.Stdout,
 		Formatter:    new(LoggerTextFormatter),
 		Hooks:        make(logrus.LevelHooks),
-		Level:        logrus.InfoLevel,
+		Level:        defaultLoglevel,
 		ExitFunc:     os.Exit,
 		ReportCaller: false,
 	}
@@ -72,7 +78,6 @@ func newWith(logrusLogger *LogrusLogger) Logger {
 	}
 
 	level, err := logrus.ParseLevel(logrusLogger.logLevel)
-
 	if err != nil {
 		log.Panic(err)
 	}
