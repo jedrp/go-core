@@ -29,13 +29,25 @@ func ConfigureTimeOut(timeoutInMillisecond int) {
 	defaultDispatcher.maxLatencyInMillisecond = time.Duration(timeoutInMillisecond) * time.Millisecond
 }
 
+func RegisterRequestHandlerFactory[TRequest Request, TResponse Response](ctx context.Context, factory HandlerFactory[TRequest, TResponse]) error {
+	return registerRequestHandler[TRequest, TResponse](factory)
+}
+
 func RegisterHandler[TRequest Request, TResponse Response](ctx context.Context, handler Handler[TRequest, TResponse]) error {
+	return registerRequestHandler[TRequest, TResponse](handler)
+}
+
+func registerRequestHandler[TRequest Request, TResponse Response](handler any) error {
 	r := *new(TRequest)
-	if _, ok := defaultDispatcher.handlersMap[r.HandlerID()]; ok {
+	_, exist := defaultDispatcher.handlersMap[r.HandlerID()]
+	if exist {
 		typeName := reflect.TypeOf(r).String()
+		// each request in request/response strategy should have just one handler
 		return fmt.Errorf("duplicated executer registration detected of type: %s handlerID: %s", typeName, r.HandlerID())
 	}
+
 	defaultDispatcher.handlersMap[r.HandlerID()] = handler
+
 	return nil
 }
 
@@ -87,4 +99,8 @@ func elapsed(ctx context.Context, what string, logger log.Logger) func() {
 	return func() {
 		logger.DebugfWithContext(ctx, "%s took %v", what, time.Since(start))
 	}
+}
+
+func ResetDispatcherSetting() {
+	defaultDispatcher.handlersMap = make(map[string]interface{})
 }
